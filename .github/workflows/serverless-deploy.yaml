@@ -1,0 +1,68 @@
+name: Deploy to AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'master'
+        type: string
+      SHOULD_SEED_DB:
+        description: 'Seed the database?'
+        required: false
+        default: false
+        type: boolean
+  workflow_call: 
+    inputs:
+      ENVIRONMENT:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'master'
+        type: string
+      SHOULD_SEED_DB:
+        description: 'Seed the database?'
+        required: false
+        default: false
+        type: boolean
+    outputs:
+      SERVICE_URL:
+        description: 'API Gateway endpoints'
+        value: ${{ jobs.deploy_to_env.outputs.SERVICE_URL }}
+
+permissions:
+    id-token: write
+    contents: read
+jobs:
+  deploy_to_env:
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
+    outputs:
+      SERVICE_URL: ${{ steps.set_service_url.outputs.SERVICE_URL }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm ci
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-2
+          audience: sts.amazonaws.com
+          role-to-assume: ${{ secrets.AWS_DEPLOYER_ROLE }}
+          role-session-name: OIDCSession
+          mask-aws-account-id: true
+      - name: serverless_deploy
+        run: npm run deploy
+      - name: seed_db
+        if: ${{ github.event.inputs.SHOULD_SEED_DB == true }}
+        run: npm run seed-db
+      - id: set_service_url
+        name: Generate, mask, and output a secret
+        run: |
+          SERVICE_URL="$(npx serverless info --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
+          # echo "::add-mask::$SERVICE_URL"
+          echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"

@@ -38,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
+      AWS_SDK_LOAD_CONFIG: 1
     outputs:
       SERVICE_URL: ${{ steps.set_service_url.outputs.SERVICE_URL }}
     steps:

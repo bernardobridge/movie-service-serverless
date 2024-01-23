@@ -1,0 +1,54 @@
+config:
+  processor: "./processor.js"
+  plugins:
+    metrics-by-endpoint:
+      useOnlyRequestNames: true
+    publish-metrics:                
+      - type: datadog
+        apiKey: "{{ $env.DD_API_KEY }}"
+        tags:
+          - "service:movie-service"
+          - "env:{{ $env.ENVIRONMENT }}"
+          - "version:{{ $env.VERSION }}"
+          - "team:prt"
+          - "test_name:get-all-movies-then-get-one"
+          - "test_type:{{ $env.TEST_TYPE }}"
+          - "ci:{{ $env.CI }}"
+          - "caller:{{ $env.CALLER }}"
+  environments:
+    smoke-prod:
+      target: "https://6sdp2hpc6h.execute-api.eu-west-2.amazonaws.com/prod"
+      phases:
+        - duration: 30s
+          arrivalRate: 2
+          rampTo: 10
+          name: Quick Phase
+    baseline-staging:
+      target: "https://acp4uwddy7.execute-api.eu-west-2.amazonaws.com/staging"
+      phases:
+        - duration: 1
+          arrivalRate: 1
+          name: Warm up
+        - duration: 10min
+          arrivalRate: 100
+          name: Baseline
+
+    regression-custom:
+      target: "{{ $env.SERVICE_URL }}"
+      phases:
+        - duration: 1
+          arrivalRate: 1
+          name: Warm up
+        - duration: 10min
+          arrivalRate: 100
+          name: Baseline
+
+scenarios:
+  - name: get-all-movies-then-get-one
+    flow:
+      - get:
+          name: GET /movies
+          url: /movies
+      - get:
+          name: GET /movies/{id}
+          url: /movies/{{ movieId }}

@@ -53,10 +53,10 @@ jobs:
           aws-region: eu-west-2
           audience: sts.amazonaws.com
           role-to-assume: ${{ secrets.AWS_DEPLOYER_ROLE }}
-          # role-session-name: OIDCSession
+          role-session-name: OIDCSession
           mask-aws-account-id: true
-      - name: Serverless Authentication
-        run: npx serverless config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
+      # - name: Serverless Authentication
+      #   run: npx serverless config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
       - name: serverless_deploy
         run: npm run deploy
         # env:

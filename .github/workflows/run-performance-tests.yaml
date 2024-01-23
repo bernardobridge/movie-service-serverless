@@ -1,0 +1,41 @@
+name: Run Performance Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: 'Environment to run the tests against'
+        required: true
+        default: 'dev'
+        type: string
+      SERVICE_URL:
+        description: 'Override the service URL'
+        required: false
+        type: string
+      TEST_TYPE:
+        description: 'Type of test to run'
+        required: true
+        type: string
+      VERSION:
+        description: 'Version of the application under test'
+        required: true
+        type: string
+
+env:
+  TAGS: 'service:movie-service,team:prt,ci:true,env:${{ inputs.ENVIRONMENT }},test_type:${{ inputs.TEST_TYPE }},version:${{ inputs.VERSION }},caller:${{ github.actor }}'
+
+jobs:
+  run_artillery_tests:
+    runs-on: ubuntu-latest
+    steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+   
+        - name: Execute load tests
+          uses: artilleryio/action-cli@v1
+          with:
+            command: run performance/get-all-movies-then-get-one.yml -e ${{ inputs.TEST_TYPE }}-${{ inputs.ENVIRONMENT }} --record --tags test_name:get-all-movies-then-get-one,${{ env.TAGS }}
+          env:
+            SERVICE_URL: ${{ inputs.SERVICE_URL }}
+            DD_API_KEY: ${{ secrets.DD_API_KEY }}
+            ARTILLERY_CLOUD_API_KEY: ${{ secrets.ARTILLERY_CLOUD_API_KEY }}

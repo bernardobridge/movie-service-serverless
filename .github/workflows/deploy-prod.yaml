@@ -9,5 +9,8 @@ on:
 jobs:
   deploy-prod:
     uses: ./.github/workflows/serverless-deploy.yaml
+    permissions:
+      id-token: write
+      contents: read
     with:
       ENVIRONMENT: prod

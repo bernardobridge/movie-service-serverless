@@ -25,7 +25,7 @@ custom:
 
 plugins:
   - serverless-deployment-bucket
-  - serverless-better-credentials
+  # - serverless-better-credentials
 
 functions:
   getAllMovies:

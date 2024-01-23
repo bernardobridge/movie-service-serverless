@@ -32,13 +32,14 @@ on:
     outputs:
       SERVICE_URL:
         description: 'API Gateway endpoints'
-        value: ${{ jobs.deploy_to_env.outputs.SERVICE_URL }}
+        value: ${{ jobs.deploy-to-env.outputs.SERVICE_URL }}
 
 permissions:
     id-token: write
     contents: read
 jobs:
-  deploy_to_env:
+  deploy-to-env:
+    environment: ${{ inputs.ENVIRONMENT }}
     runs-on: ubuntu-latest
     env:
       ENVIRONMENT: ${{ inputs.ENVIRONMENT }}

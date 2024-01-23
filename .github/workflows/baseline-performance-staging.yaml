@@ -1,0 +1,20 @@
+name: Run Baseline Performance (Staging)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 * * * *"
+
+jobs:
+  run-perf-test:
+    uses: ./.github/workflows/run-performance-test.yaml
+    permissions:
+      id-token: write
+      contents: read
+    secrets:
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      ARTILLERY_CLOUD_API_KEY: ${{ secrets.ARTILLERY_CLOUD_API_KEY }}
+    with:
+      ENVIRONMENT: staging
+      TEST_TYPE: baseline
+      VERSION: ${{ github.sha }}

@@ -45,6 +45,7 @@ config:
 
 scenarios:
   - name: get-all-movies-then-get-one
+    beforeScenario: myBeforeScenarioHandler
     flow:
       - get:
           name: GET /movies

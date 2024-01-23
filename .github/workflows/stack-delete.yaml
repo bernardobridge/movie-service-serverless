@@ -7,6 +7,12 @@ on:
         description: 'Environment to delete stack from'
         required: true
         type: string
+  workflow_call:
+    inputs:
+      ENVIRONMENT:
+        description: 'Environment to delete stack from'
+        required: true
+        type: string
 
 permissions:
     id-token: write
@@ -14,8 +20,6 @@ permissions:
 jobs:
   delete_stack:
     runs-on: ubuntu-latest
-    env:
-      ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18.x

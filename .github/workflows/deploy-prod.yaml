@@ -12,5 +12,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
+    secrets:
+      AWS_DEPLOYER_ROLE: ${{ secrets.AWS_DEPLOYER_ROLE }}
     with:
       ENVIRONMENT: prod

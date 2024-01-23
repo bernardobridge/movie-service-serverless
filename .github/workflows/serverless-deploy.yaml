@@ -25,6 +25,10 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      AWS_DEPLOYER_ROLE:
+        description: 'AWS IAM Role to assume'
+        required: true
     outputs:
       SERVICE_URL:
         description: 'API Gateway endpoints'

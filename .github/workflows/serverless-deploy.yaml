@@ -38,7 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
-      AWS_SDK_LOAD_CONFIG: 1
     outputs:
       SERVICE_URL: ${{ steps.set_service_url.outputs.SERVICE_URL }}
     steps:
@@ -58,6 +57,8 @@ jobs:
           mask-aws-account-id: true
       - name: serverless_deploy
         run: npm run deploy
+        env:
+          AWS_SDK_LOAD_CONFIG: 1
       - name: seed_db
         if: ${{ github.event.inputs.SHOULD_SEED_DB == true }}
         run: npm run seed-db
@@ -67,3 +68,5 @@ jobs:
           SERVICE_URL="$(npx serverless info --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
           # echo "::add-mask::$SERVICE_URL"
           echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"
+        env:
+          AWS_SDK_LOAD_CONFIG: 1

@@ -63,5 +63,10 @@ jobs:
             command: run performance/get-all-movies-then-get-one.yml -e ${{ inputs.TEST_TYPE }}-${{ inputs.ENVIRONMENT }} --record --tags test_name:get-all-movies-then-get-one,${{ env.TAGS }}
           env:
             SERVICE_URL: ${{ inputs.SERVICE_URL }}
+            ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
+            VERSION: ${{ inputs.VERSION }}
+            TEST_TYPE: ${{ inputs.TEST_TYPE }}
+            CI: true
+            CALLER: ${{ github.actor }}
             DD_API_KEY: ${{ secrets.DD_API_KEY }}
             ARTILLERY_CLOUD_API_KEY: ${{ secrets.ARTILLERY_CLOUD_API_KEY }}

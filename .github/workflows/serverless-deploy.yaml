@@ -65,6 +65,8 @@ jobs:
       - name: seed_db
         if: ${{ inputs.SHOULD_SEED_DB == true }}
         run: npm run seed-db
+      - name: Do serverless info
+        run: npx serverless info --verbose | grep ServiceEndpoint
       - id: set_service_url
         name: Generate, mask, and output a secret
         run: |

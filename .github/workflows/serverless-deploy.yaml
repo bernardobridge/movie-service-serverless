@@ -65,9 +65,11 @@ jobs:
       - name: seed_db
         if: ${{ inputs.SHOULD_SEED_DB == true }}
         run: npm run seed-db
+      - name: Do serverless info
+        run: npx serverless info --stage ${{ inputs.ENVIRONMENT }} --verbose
       - id: set_service_url
         name: Generate, mask, and output a secret
         run: |
-          SERVICE_URL="$(npx serverless info --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
-          # echo "::add-mask::$SERVICE_URL"
+          SERVICE_URL="$(npx serverless info --stage ${{ inputs.ENVIRONMENT }} --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
+          echo "::add-mask::$SERVICE_URL"
           echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"

@@ -36,3 +36,14 @@ jobs:
         run: echo "Running functional tests against ${{ needs.deploy-ephemeral.outputs.SERVICE_URL }}"
         env:
           SERVICE_URL: ${{ needs.deploy-ephemeral.outputs.SERVICE_URL }}
+  
+  teardown-ephemeral-env:
+    uses: ./.github/workflows/stack-delete.yaml
+    needs: run-functional-tests
+    permissions:
+      id-token: write
+      contents: read
+    secrets:
+      AWS_DEPLOYER_ROLE: ${{ secrets.AWS_DEPLOYER_ROLE }}
+    with:
+      ENVIRONMENT: ${{ github.actor }}-${{ github.event.pull_request.number }}

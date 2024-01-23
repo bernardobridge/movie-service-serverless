@@ -13,6 +13,10 @@ on:
         description: 'Environment to delete stack from'
         required: true
         type: string
+    secrets:
+      AWS_DEPLOYER_ROLE:
+        description: 'AWS Role to assume'
+        required: true
 
 permissions:
     id-token: write

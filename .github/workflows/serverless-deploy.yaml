@@ -41,7 +41,7 @@ jobs:
   deploy_to_env:
     runs-on: ubuntu-latest
     env:
-      ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
+      ENVIRONMENT: ${{ inputs.ENVIRONMENT }}
     outputs:
       SERVICE_URL: ${{ steps.set_service_url.outputs.SERVICE_URL }}
     steps:
@@ -59,22 +59,8 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOYER_ROLE }}
           role-session-name: OIDCSession
           mask-aws-account-id: true
-      # - name: Serverless OIDC Login #https://github.com/thomasmichaelwallace/serverless-better-credentials?tab=readme-ov-file#troubleshooting
-      #   run: |
-      #     mkdir -p ~/.aws
-      #     rm -rf ~/.aws/credentials
-      #     echo "[default]" >> ~/.aws/credentials
-      #     echo "aws_access_key_id = ${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
-      #     echo "aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
-      #     echo "aws_session_token = ${AWS_SESSION_TOKEN}" >> ~/.aws/credentials
-      #     echo "region = eu-west-2" >> ~/.aws/credentials
-      #     echo "output = json" >> ~/.aws/credentials
-      # - name: Serverless Authentication
-      #   run: npx serverless config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
       - name: serverless_deploy
         run: npm run deploy
-        # env:
-        #   AWS_SDK_LOAD_CONFIG: 1
       - name: seed_db
         if: ${{ inputs.SHOULD_SEED_DB == true }}
         run: npm run seed-db
@@ -84,5 +70,3 @@ jobs:
           SERVICE_URL="$(npx serverless info --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
           # echo "::add-mask::$SERVICE_URL"
           echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"
-        # env:
-        #   AWS_SDK_LOAD_CONFIG: 1

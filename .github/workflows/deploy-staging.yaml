@@ -1,0 +1,18 @@
+name: Deploy to staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-staging:
+    uses: ./.github/workflows/serverless-deploy.yaml
+    permissions:
+      id-token: write
+      contents: read
+    secrets:
+      AWS_DEPLOYER_ROLE: ${{ secrets.AWS_DEPLOYER_ROLE }}
+    with:
+      ENVIRONMENT: staging

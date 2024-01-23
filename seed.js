@@ -4,24 +4,32 @@ const { REGION, TABLE_NAME } = require('./constants');
 const dynamoDb = new AWS.DynamoDB.DocumentClient({ region: REGION });
 const movies = require('./tmdb_movies.json');
 
-async function uploadMovie(movie) {
+async function uploadMoviesBatch(moviesBatch) {
     const params = {
-        TableName: TABLE_NAME,
-        Item: movie,
+        RequestItems: {
+            [TABLE_NAME]: moviesBatch.map(movie => ({
+                PutRequest: {
+                    Item: movie,
+                },
+            })),
+        },
     };
 
     try {
-        await dynamoDb.put(params).promise();
-        console.log(`Movie added: ${movie.title}`);
+        await dynamoDb.batchWrite(params).promise();
+        const movieTitles = moviesBatch.map(movie => movie.title);
+        console.log(`Movies batch added:`, movieTitles);
     } catch (error) {
-        console.error(`Error adding movie: ${movie.title}`, error);
+        console.error('Error adding movies batch', error);
     }
 }
 
 async function uploadAllMovies() {
-    for (const movie of movies) {
-        await uploadMovie(movie);
-        await new Promise(resolve => setTimeout(resolve, 100));
+    const BATCH_SIZE = 25;
+    for (let i = 0; i < movies.length; i += BATCH_SIZE) {
+        const moviesBatch = movies.slice(i, i + BATCH_SIZE);
+        await uploadMoviesBatch(moviesBatch);
+        await new Promise(resolve => setTimeout(resolve, 100)); // Throttling
     }
 }
 

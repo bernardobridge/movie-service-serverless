@@ -4,25 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       ENVIRONMENT:
-        description: 'Environment to deploy to'
+        description: 'Environment to delete stack from'
         required: true
         type: string
-#   workflow_call: 
-#     inputs:
-#       ENVIRONMENT:
-#         description: 'Environment to deploy to'
-#         required: true
-#         default: 'master'
-#         type: string
-#       SHOULD_SEED_DB:
-#         description: 'Seed the database?'
-#         required: false
-#         default: false
-#         type: boolean
-#     outputs:
-#       SERVICE_URL:
-#         description: 'API Gateway endpoints'
-#         value: ${{ jobs.deploy_to_env.outputs.SERVICE_URL }}
 
 permissions:
     id-token: write

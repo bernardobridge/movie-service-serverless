@@ -1,0 +1,51 @@
+name: Delete AWS Stack
+
+on:
+  workflow_dispatch:
+    inputs:
+      ENVIRONMENT:
+        description: 'Environment to deploy to'
+        required: true
+        type: string
+#   workflow_call: 
+#     inputs:
+#       ENVIRONMENT:
+#         description: 'Environment to deploy to'
+#         required: true
+#         default: 'master'
+#         type: string
+#       SHOULD_SEED_DB:
+#         description: 'Seed the database?'
+#         required: false
+#         default: false
+#         type: boolean
+#     outputs:
+#       SERVICE_URL:
+#         description: 'API Gateway endpoints'
+#         value: ${{ jobs.deploy_to_env.outputs.SERVICE_URL }}
+
+permissions:
+    id-token: write
+    contents: read
+jobs:
+  delete_stack:
+    runs-on: ubuntu-latest
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.ENVIRONMENT }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - run: npm ci
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-2
+          audience: sts.amazonaws.com
+          role-to-assume: ${{ secrets.AWS_DEPLOYER_ROLE }}
+          role-session-name: OIDCSession
+          mask-aws-account-id: true
+      - name: Delete Cloudformation Stack
+        run: npx serverless remove --stage ${{ inputs.ENVIRONMENT }}

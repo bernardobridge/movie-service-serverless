@@ -55,7 +55,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_DEPLOYER_ROLE }}
           role-session-name: OIDCSession
           mask-aws-account-id: true
-      - name: Serverless OIDC Login  #https://github.com/thomasmichaelwallace/serverless-better-credentials?tab=readme-ov-file#troubleshooting
+      - name: Serverless OIDC Login #https://github.com/thomasmichaelwallace/serverless-better-credentials?tab=readme-ov-file#troubleshooting
         run: |
           mkdir -p ~/.aws
           rm -rf ~/.aws/credentials
@@ -69,8 +69,8 @@ jobs:
       #   run: npx serverless config credentials --provider aws --key ${{ env.AWS_ACCESS_KEY_ID }} --secret ${{ env.AWS_SECRET_ACCESS_KEY }}
       - name: serverless_deploy
         run: npm run deploy
-        # env:
-        #   AWS_SDK_LOAD_CONFIG: 1
+        env:
+          AWS_SDK_LOAD_CONFIG: 1
       - name: seed_db
         if: ${{ github.event.inputs.SHOULD_SEED_DB == true }}
         run: npm run seed-db
@@ -80,5 +80,5 @@ jobs:
           SERVICE_URL="$(npx serverless info --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
           # echo "::add-mask::$SERVICE_URL"
           echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"
-        # env:
-        #   AWS_SDK_LOAD_CONFIG: 1
+        env:
+          AWS_SDK_LOAD_CONFIG: 1

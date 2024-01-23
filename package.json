@@ -1,0 +1,23 @@
+{
+  "name": "movie-service-serverless",
+  "version": "1.0.0",
+  "description": "",
+  "main": "count.js",
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0",
+    "deploy": "serverless deploy --stage $ENVIRONMENT",
+    "seed-db": "node seed.js",
+    "get-apigw-url": "serverless info --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\\:\\ //g"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.496.0",
+    "@aws-sdk/lib-dynamodb": "^3.496.0"
+  },
+  "devDependencies": {
+    "serverless": "^3.38.0",
+    "serverless-better-credentials": "^2.0.0",
+    "serverless-deployment-bucket": "^1.6.0"
+  }
+}

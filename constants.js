@@ -1,4 +1,5 @@
 const SERVICE_NAME = "movie-service";
+const ENVIRONMENT = process.env.ENVIRONMENT || "dev";
 const REGION = process.env.DEPLOYMENT_REGION || "eu-west-2";
 
 module.exports = {

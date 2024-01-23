@@ -7,7 +7,7 @@ on:
       ENVIRONMENT:
         description: 'Environment to deploy to'
         required: true
-        default: 'master'
+        default: 'dev'
         type: string
       SHOULD_SEED_DB:
         description: 'Seed the database?'

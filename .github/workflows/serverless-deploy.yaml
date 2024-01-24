@@ -29,6 +29,9 @@ on:
       AWS_DEPLOYER_ROLE:
         description: 'AWS IAM Role to assume'
         required: true
+      DD_API_KEY:
+        description: 'Datadog API Key'
+        required: true
     outputs:
       SERVICE_URL:
         description: 'API Gateway endpoints'
@@ -73,3 +76,17 @@ jobs:
           SERVICE_URL="$(npx serverless info --stage ${{ inputs.ENVIRONMENT }} --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
           echo "::add-mask::$SERVICE_URL"
           echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"
+      - name: Send Datadog Deployment Event
+        if: success()
+        uses: masci/datadog@v1
+        with:
+          api-key: ${{ secrets.DD_API_KEY }}
+          events: |
+            - title: "Deployment to ${{ inputs.ENVIRONMENT }}"
+              text: "Branch ${{ github.head_ref }} deployed to ${{ inputs.ENVIRONMENT }} by ${{ github.actor }}"
+              alert_type: "success"
+              source: github
+              tags:
+                - "env:${{ inputs.ENVIRONMENT }}"
+                - "repo:${{ github.repository }}"
+                - "service:movie-service"

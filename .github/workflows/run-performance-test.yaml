@@ -60,7 +60,7 @@ jobs:
         - name: Execute load tests
           uses: artilleryio/action-cli@v1
           with:
-            command: run performance/get-all-movies-then-get-one.yml -e ${{ inputs.TEST_TYPE }}-${{ inputs.ENVIRONMENT }} --record --tags test_name:get-all-movies-then-get-one,${{ env.TAGS }}
+            command: run performance/get-all-movies-then-get-one.yml -e ${{ inputs.TEST_TYPE }}-${{ inputs.ENVIRONMENT }} --record --tags ${{ env.TAGS }}
           env:
             SERVICE_URL: ${{ inputs.SERVICE_URL }}
             ENVIRONMENT: ${{ inputs.ENVIRONMENT }}

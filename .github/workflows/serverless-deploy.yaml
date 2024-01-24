@@ -89,3 +89,4 @@ jobs:
                 - "env:${{ inputs.ENVIRONMENT }}"
                 - "repo:${{ github.repository }}"
                 - "service:movie-service"
+                - "event_type:deployment"

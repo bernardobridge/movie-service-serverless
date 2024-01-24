@@ -1,13 +1,16 @@
-const moviesData = require('../tmdb_movies.json');
+let movies;
 
-function myBeforeScenarioHandler(context, ee, next) {
-    const randomMovie = moviesData[Math.floor(Math.random() * moviesData.length)];
+function getRandomMovieId(req, res, context, ee, next) {
+    if (!movies) {
+        movies = JSON.parse(res.body);
+    }
 
-    context.vars.movieId = randomMovie.id;
-
+    const randomMovie = movies[Math.floor(Math.random() * movies.length)];
+    context.vars.getRandomMovieId = randomMovie.id;
     next();
 };
 
 module.exports = {
-    myBeforeScenarioHandler
+    getRandomMovieId
 }
+

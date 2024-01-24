@@ -48,15 +48,14 @@ config:
         - duration: 10min
           arrivalRate: 100
           name: Baseline
-          
 
 scenarios:
   - name: get-all-movies-then-get-one
-    beforeScenario: myBeforeScenarioHandler
     flow:
       - get:
           name: GET /movies
           url: /movies
+          afterResponse: getRandomMovieId
       - get:
           name: GET /movies/{id}
           url: /movies/{{ movieId }}

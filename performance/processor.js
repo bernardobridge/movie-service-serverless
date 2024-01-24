@@ -6,7 +6,7 @@ function getRandomMovieId(req, res, context, ee, next) {
     }
 
     const randomMovie = movies[Math.floor(Math.random() * movies.length)];
-    context.vars.getRandomMovieId = randomMovie.id;
+    context.vars.movieId = randomMovie.id;
     next();
 };
 

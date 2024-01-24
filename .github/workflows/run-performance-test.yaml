@@ -8,10 +8,6 @@ on:
         required: true
         options: ['staging', 'prod', 'custom']
         type: choice
-      SERVICE_URL:
-        description: 'Override the service URL'
-        required: false
-        type: string
       TEST_TYPE:
         description: 'Type of test to run'
         required: true
@@ -21,15 +17,15 @@ on:
         description: 'Version of the application under test'
         required: true
         type: string
+      SERVICE_URL:
+        description: 'Override the service URL'
+        required: false
+        type: string
   workflow_call:
     inputs:
       ENVIRONMENT:
         description: 'Environment to run the tests against'
         required: true
-        type: string
-      SERVICE_URL:
-        description: 'Override the service URL'
-        required: false
         type: string
       TEST_TYPE:
         description: 'Type of test to run'
@@ -38,6 +34,10 @@ on:
       VERSION:
         description: 'Version of the application under test'
         required: true
+        type: string
+      SERVICE_URL:
+        description: 'Override the service URL'
+        required: false
         type: string
     secrets:
       DD_API_KEY:

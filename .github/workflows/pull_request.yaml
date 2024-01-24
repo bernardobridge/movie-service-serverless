@@ -24,6 +24,7 @@ jobs:
       contents: read
     secrets:
       AWS_DEPLOYER_ROLE: ${{ secrets.AWS_DEPLOYER_ROLE }}
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
     with:
       ENVIRONMENT: ${{ github.actor }}-${{ github.event.pull_request.number }}
       SHOULD_SEED_DB: true

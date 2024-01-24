@@ -14,5 +14,6 @@ jobs:
       contents: read
     secrets:
       AWS_DEPLOYER_ROLE: ${{ secrets.AWS_DEPLOYER_ROLE }}
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
     with:
       ENVIRONMENT: staging

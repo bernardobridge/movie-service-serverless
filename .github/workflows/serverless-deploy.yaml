@@ -85,7 +85,6 @@ jobs:
             - title: "Deployment to ${{ inputs.ENVIRONMENT }}"
               text: "Branch deployed to ${{ inputs.ENVIRONMENT }} by ${{ github.actor }}"
               alert_type: "success"
-              source_type_name: "github"
               tags:
                 - "env:${{ inputs.ENVIRONMENT }}"
                 - "repo:${{ github.repository }}"

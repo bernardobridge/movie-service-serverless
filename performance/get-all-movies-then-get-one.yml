@@ -11,10 +11,20 @@ config:
           - "env:{{ $env.ENVIRONMENT }}"
           - "version:{{ $env.VERSION }}"
           - "team:prt"
-          - "test_name:get-all-movies-then-get-one"
+          - "name:get-all-movies-then-get-one"
           - "test_type:{{ $env.TEST_TYPE }}"
           - "ci:{{ $env.CI }}"
           - "caller:{{ $env.CALLER }}"
+        event:
+          tags:
+            - "service:movie-service"
+            - "env:{{ $env.ENVIRONMENT }}"
+            - "version:{{ $env.VERSION }}"
+            - "team:prt"
+            - "name:get-all-movies-then-get-one"
+            - "test_type:{{ $env.TEST_TYPE }}"
+            - "ci:{{ $env.CI }}"
+            - "caller:{{ $env.CALLER }}"
   environments:
     smoke-prod:
       target: "https://6sdp2hpc6h.execute-api.eu-west-2.amazonaws.com/prod"

@@ -3,8 +3,8 @@ name: Deploy to prod
 on:
   workflow_dispatch:
   schedule:
-    # every monday at 6:00 AM UTC
-    - cron: '0 6 * * 1'
+    # every 2 hours
+    - cron: '0 */2 * * *'
 
 jobs:
   deploy-prod:
@@ -17,3 +17,16 @@ jobs:
       DD_API_KEY: ${{ secrets.DD_API_KEY }}
     with:
       ENVIRONMENT: prod
+  
+  run-perf-smoke:
+    uses: ./.github/workflows/run-performance-test.yaml
+    permissions:
+      id-token: write
+      contents: read
+    secrets:
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      ARTILLERY_CLOUD_API_KEY: ${{ secrets.ARTILLERY_CLOUD_API_KEY }}
+    with:
+      ENVIRONMENT: prod
+      TEST_TYPE: smoke
+      VERSION: ${{ github.sha }}

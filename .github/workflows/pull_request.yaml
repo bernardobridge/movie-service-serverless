@@ -37,10 +37,25 @@ jobs:
         run: echo "Running functional tests against ${{ needs.deploy-ephemeral.outputs.SERVICE_URL }}"
         env:
           SERVICE_URL: ${{ needs.deploy-ephemeral.outputs.SERVICE_URL }}
+
+  run-perf-regression:
+    uses: ./.github/workflows/run-performance-test.yaml
+    needs: [deploy-ephemeral, run-functional-tests]
+    permissions:
+      id-token: write
+      contents: read
+    secrets:
+      DD_API_KEY: ${{ secrets.DD_API_KEY }}
+      ARTILLERY_CLOUD_API_KEY: ${{ secrets.ARTILLERY_CLOUD_API_KEY }}
+    with:
+      ENVIRONMENT: custom
+      TEST_TYPE: regression
+      VERSION: ${{ github.sha }}
+      SERVICE_URL: ${{ needs.deploy-ephemeral.outputs.SERVICE_URL }}
   
   teardown-ephemeral-env:
     uses: ./.github/workflows/stack-delete.yaml
-    needs: run-functional-tests
+    needs: run-perf-regression
     permissions:
       id-token: write
       contents: read

@@ -74,7 +74,6 @@ jobs:
         name: Generate, mask, and output a secret
         run: |
           SERVICE_URL="$(npx serverless info --stage ${{ inputs.ENVIRONMENT }} --verbose | grep ServiceEndpoint | sed s/ServiceEndpoint\:\ //g)"
-          echo "::add-mask::$SERVICE_URL"
           echo "SERVICE_URL=$SERVICE_URL" >> "$GITHUB_OUTPUT"
       - name: Send Datadog Deployment Event
         if: success()

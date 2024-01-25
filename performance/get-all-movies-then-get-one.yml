@@ -1,6 +1,7 @@
 config:
   processor: "./processor.js"
   plugins:
+    expect: {}
     metrics-by-endpoint:
       useOnlyRequestNames: true
     publish-metrics:                
@@ -38,6 +39,13 @@ config:
         - duration: 10min
           arrivalRate: 100
           name: Baseline
+      plugins:
+        ensure:
+          maxErrorRate: 0.1
+          thresholds:
+            - "plugins.metrics-by-endpoint.response_time.GET /movies.p99": 1000
+            - "plugins.metrics-by-endpoint.response_time.GET /movies/id.p99": 500
+          
     regression-custom:
       target: "{{ $env.SERVICE_URL }}"
       phases:
@@ -48,6 +56,12 @@ config:
         - duration: 10min
           arrivalRate: 100
           name: Baseline
+      plugins:
+        ensure:
+          maxErrorRate: 0.1
+          thresholds:
+            - "plugins.metrics-by-endpoint.response_time.GET /movies.p99": 1000
+            - "plugins.metrics-by-endpoint.response_time.GET /movies/id.p99": 500
 
 scenarios:
   - name: get-all-movies-then-get-one
@@ -56,6 +70,10 @@ scenarios:
           name: GET /movies
           url: /movies
           afterResponse: getRandomMovieId
+          expect:
+            - statusCode: 200
       - get:
-          name: GET /movies/{id}
+          name: GET /movies/id
           url: /movies/{{ movieId }}
+          expect:
+            - statusCode: 200
